@@ -19,26 +19,74 @@ export default {
   data() {
     return {
       slideCount: 0,
+      clientX: 0,
+      startPosition:0,
+      endPosition:0,
+      currentPosition:0,
+      timmer:null,
+      rollFlag: true,
     };
   },
   prop: {},
   methods: {
-    touchStart() {},
-    touchMove() {},
-    touchEnd() {},
+    // 轮播图自动滚动
+    picRoll(){
+      let swiper = document.querySelector("#swiper > .swiper");
+      let swiperItem = document.querySelectorAll("#swiper > .swiper > .swiper-item");
+      let indicator = document.querySelectorAll("#swiper .indicator");
+      // console.log(indictaor);
+      let itemCount = swiperItem.length;
+      let index = (this.currentPosition + swiper.offsetWidth) / swiper.offsetWidth;
+      if(index < itemCount) {
+
+      }
+
+
+      let totalWidth = (itemCount - 1) * swiper.offsetWidth;
+      if(this.currentPosition < totalWidth && this.rollFlag){
+        this.currentPosition += swiper.offsetWidth;
+      } else {
+        this.rollFlag = false;
+      }
+      if(this.currentPosition > 0 && !this.rollFlag){
+        this.currentPosition -= swiper.offsetWidth;
+      } else {
+        if(!this.rollFlag) this.currentPosition += swiper.offsetWidth;
+        this.rollFlag = true;
+      }
+      swiper.style.transform = `translateX(-${this.currentPosition}px)`
+    },
+    touchStart(e) {
+      // 点触位置
+      clearInterval(this.timmer)
+      // this.picRoll();
+
+    },
+
+    touchMove(e) {
+
+    },
+
+    touchEnd(e) {
+
+    },
     // 获取滑块个数
     getItemCount() {
       let itemEls = document.querySelectorAll(
         "#swiper > .swiper > .swiper-item"
       );
       this.slideCount = itemEls.length;
-      console.log(itemEls.length);
+      // console.log(itemEls.length);
     },
   },
   mounted() {
     setTimeout(() => {
       this.getItemCount();
     }, 100);
+
+    this.timmer = setInterval(() => {
+      this.picRoll();
+    },2000)
   },
 };
 </script>
@@ -49,6 +97,8 @@ export default {
   position: relative;
   .swiper {
     display: flex;
+    transition: 1s all linear;
+    // transform: translateX(0px);
   }
   .indicator-box {
     width: 25%;
