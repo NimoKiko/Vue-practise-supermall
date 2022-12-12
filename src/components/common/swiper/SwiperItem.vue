@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-item">
+  <div class="slide">
     <slot></slot>
   </div>
 </template>
@@ -9,7 +9,7 @@ export default {};
 </script>
 
 <style lang="less" scoped>
-.swiper-item {
+.slide {
   width: 100%;
   flex-shrink: 0;
 }

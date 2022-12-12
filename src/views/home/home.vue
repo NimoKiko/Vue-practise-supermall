@@ -7,13 +7,14 @@
       </template>
     </nav-bar>
     <home-swiper :banners="banner"></home-swiper>
-    <button @click="getData">获取数据</button>
+    <home-recommend :recommends="recomment"></home-recommend>
   </div>
 </template>
 
 <script>
 import NavBar from "@/components/common/navbar/NavBar.vue"
 import HomeSwiper from "./childCpn/HomeSwiper.vue"
+import HomeRecommend from "./childCpn/HomeRecommend.vue"
 export default {
   data() {
     return {
@@ -23,7 +24,8 @@ export default {
   },
   components:{
     NavBar,
-    HomeSwiper
+    HomeSwiper,
+    HomeRecommend
   },
   methods:{
     getData(){
