@@ -1,13 +1,14 @@
 <template>
   <div id="home">
     <!-- 导航栏 -->
-    <nav-bar class="nav-bar">
+    <NavBar class="nav-bar">
       <template #nav-center>
         <div>购物街</div>
       </template>
-    </nav-bar>
-    <home-swiper :banners="banner"></home-swiper>
-    <home-recommend :recommends="recomment"></home-recommend>
+    </NavBar>
+    <HomeSwiper :banners="banner"></HomeSwiper>
+    <HomeRecommend :recommends="recomment"></HomeRecommend>
+    <FeatureView></FeatureView>
   </div>
 </template>
 
@@ -15,6 +16,7 @@
 import NavBar from "@/components/common/navbar/NavBar.vue"
 import HomeSwiper from "./childCpn/HomeSwiper.vue"
 import HomeRecommend from "./childCpn/HomeRecommend.vue"
+import FeatureView from "./childCpn/FeatureView.vue"
 export default {
   data() {
     return {
@@ -25,7 +27,8 @@ export default {
   components:{
     NavBar,
     HomeSwiper,
-    HomeRecommend
+    HomeRecommend,
+    FeatureView
   },
   methods:{
     getData(){
@@ -45,10 +48,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#home{
+  padding-top: 43px;
+}
 .nav-bar{
   background: var(--color-tint);
   color: white;
   font-size: 22px;
   font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>
