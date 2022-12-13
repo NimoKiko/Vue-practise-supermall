@@ -2,7 +2,7 @@
   功能：功能描述
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月12日 16:58:23
+  时间：2022年12月13日 11:21:27
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,14 +10,17 @@
   修改时间：
 -->
 <template>
-  <div class="tab-control">
-    <div
-      class="tab-control-item"
-      v-for="(item, index) in titles"
-      :class="{ active: index == currentIndex }"
-      @click="tabChange(index)"
-    >
-      <span class="tab-control-item-text">{{ item }}</span>
+  <div class="goods-item">
+    <img :src="goodsItem.show.img" alt="" />
+    <p class="title">{{ goodsItem.title }}</p>
+    <div class="content">
+      <span class="price">{{ goodsItem.orgPrice }}</span>
+      <img
+        class="collect-icon"
+        src="@/assets/images/home/collect_icon.png"
+        alt=""
+      />
+      <span class="collect">{{ goodsItem.cfav }}</span>
     </div>
   </div>
 </template>
@@ -28,10 +31,10 @@ export default {
   name: "demo",
   // 组件参数 接收来自父组件的数据
   props: {
-    titles: {
-      type: Array,
+    goodsItem: {
+      type: Object,
       default() {
-        return [];
+        return {};
       },
     },
   },
@@ -39,22 +42,14 @@ export default {
   components: {},
   // 组件状态值
   data() {
-    return {
-      currentIndex: 0,
-    };
+    return {};
   },
   // 计算属性
   computed: {},
   // 侦听器
   watch: {},
   // 组件方法
-  methods: {
-    tabChange(index) {
-      // console.log(index);
-      this.$emit("tabChange",index);
-      this.currentIndex = index;
-    }
-  },
+  methods: {},
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
    * 在实例初始化之后，组件属性计算之前，如data属性等
@@ -108,22 +103,40 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-.tab-control {
-  width: 100%;
-  display: flex;
-  text-align: center;
-  font-size: 17px;
-  height: 40px;
-  line-height: 40px;
-  font-weight: 500;
-  .tab-control-item {
-    flex: 1;
+.goods-item {
+  margin-top: 15px;
+  position: relative;
+  width: 45%;
+  img {
+    width: 100%;
+    border-radius: 10px;
   }
-  .active {
-    color: var(--color-high-text);
-    .tab-control-item-text {
-      padding: 5px;
-      border-bottom: 2px solid var(--color-high-text);
+  .title {
+    width: 100%; /* 定好宽度 */
+    height: 15px; /* 高度根据需求要不要 */
+    // 多出部分用省略号表示
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 16px;
+  }
+  .content {
+    // border: 1px solid red;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    .price {
+      font-weight: bold;
+    }
+    .collect {
+      position: absolute;
+      right: 20%;
+    }
+    .collect-icon {
+      position: absolute;
+      width: 25px;
+      right: 10px;
     }
   }
 }

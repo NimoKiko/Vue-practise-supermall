@@ -18,7 +18,7 @@
 		line-height: 44px;
 		display: flex;
 		text-align: center;
-    box-shadow: 0 1px 10px 1px rgb(227, 227, 227);
+    /* box-shadow: 0 1px 10px 1px rgb(227, 227, 227); */
   }
 		.nav-left {
 			width: 70px;
