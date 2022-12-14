@@ -144,7 +144,6 @@ export default {
     loadMore(){
       // console.log("上拉加载更多");
       this.getGoodsList(this.currentTab);
-      this.$refs.homeScroll.scroll.refresh();
     }
 
   },

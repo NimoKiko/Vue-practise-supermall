@@ -55,6 +55,7 @@ export default {
         click: true,
         pullUpLoad: this.pollUpLoad,
         observeDOM: true,
+        observeImage: true
       });
     },
     // 返回顶部
