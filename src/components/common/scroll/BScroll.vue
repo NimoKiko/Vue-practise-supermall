@@ -28,10 +28,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    pollUpLoad:{
+    pullUpLoad: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   // 局部注册的组件
   components: {},
@@ -53,9 +53,9 @@ export default {
       this.scroll = new BScroll(wrapper, {
         probeType: 3,
         click: true,
-        pullUpLoad: this.pollUpLoad,
+        pullUpLoad: this.pullUpLoad,
         observeDOM: true,
-        observeImage: true
+        observeImage: true,
       });
     },
     // 返回顶部
@@ -70,16 +70,21 @@ export default {
       });
     },
     // 监听拉到底部
-    pullingUp(){
-      this.scroll.on("pullingUp",() => {
+    pullingUp() {
+      this.scroll.on("pullingUp", () => {
         // console.log('上拉加载更多');
         this.$emit("loadMore");
-      })
+      });
     },
     // 上拉结束
-    finishPullUp(){
-      this.scroll.finishPullUp(20000);
-    }
+    finishPullUp() {
+      this.scroll.finishPullUp();
+    },
+    // 重刷
+    refresh() {
+      // console.log("重刷了哦");
+      this.scroll.refresh();
+    },
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
@@ -103,7 +108,9 @@ export default {
     if (this.listenerFlag) {
       this.scrollListener();
     }
-    this.pullingUp();
+    if (this.pullUpLoad) {
+      this.pullingUp();
+    }
   },
   /**
    * 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。

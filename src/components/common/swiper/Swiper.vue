@@ -135,7 +135,7 @@ export default {
         // 把第一个节点插入到最后一个节点之后
         swiperEl.appendChild(cloneFirst);
         this.totalWidth = swiperEl.offsetWidth;
-        console.log(swiperEl.offsetWidth);
+        // console.log(swiperEl.offsetWidth);
         this.swiperStyle = swiperEl.style;
       }
 

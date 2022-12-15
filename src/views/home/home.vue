@@ -6,30 +6,41 @@
         <div>购物街</div>
       </template>
     </NavBar>
+    <TabControl
+      class="tab-control-top"
+      :titles="['流行', '新款', '精选']"
+      @tabChange="goodsListChange"
+      ref="tabControl1"
+      v-show="isTabFixed"
+    ></TabControl>
     <Scroll
       :listenerFlag="true"
-      :pollUpLoad="true"
+      :pullUpLoad="true"
       class="scroll-wrapper"
       ref="homeScroll"
       @scrollPos="scrollPos"
       @loadMore="loadMore"
     >
       <!-- 轮播图组件 -->
-      <HomeSwiper :banners="banner"></HomeSwiper>
+      <HomeSwiper @swiperImgLoad="swiperImgLoad" :banners="banner"></HomeSwiper>
       <!-- 推荐组件 -->
       <HomeRecommend :recommends="recomment"></HomeRecommend>
       <!-- 本周流行组件 -->
       <FeatureView></FeatureView>
       <!-- tab组件 -->
       <TabControl
-        class="tab-control"
         :titles="['流行', '新款', '精选']"
         @tabChange="goodsListChange"
+        ref="tabControl2"
       ></TabControl>
       <!-- 商品列表组件 -->
       <GoodsList :goods="showGoods"></GoodsList>
     </Scroll>
-    <BackToTop v-show="backTopShow" @click="backToTop" class="back-to-top"></BackToTop>
+    <BackToTop
+      v-show="backTopShow"
+      @click="backToTop"
+      class="back-to-top"
+    ></BackToTop>
   </div>
 </template>
 
@@ -44,6 +55,9 @@ import TabControl from "@/components/common/tabcontrol/TabControl.vue";
 import GoodsList from "@/components/content/goods/GoodsList.vue";
 import BackToTop from "@/components/content/backtotop/BackToTop.vue";
 
+// 工具类
+import utils from "@/common/utils/utils";
+
 export default {
   data() {
     return {
@@ -57,6 +71,8 @@ export default {
       currentTab: "pop",
       BScroll: null,
       backTopShow: false,
+      tabOffsetTop: 684,
+      isTabFixed: false,
     };
   },
   components: {
@@ -99,6 +115,14 @@ export default {
         case 2:
           this.currentTab = "sell";
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
+    },
+    // 监听轮播图是否加载完毕
+    swiperImgLoad() {
+      // 获取tab-control的offsetTop
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+      console.log(this.tabOffsetTop);
     },
     /**
      * 网络请求相关方法
@@ -124,7 +148,6 @@ export default {
          */
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page++;
-        console.log(this.goods);
         this.$refs.homeScroll.finishPullUp();
       });
     },
@@ -136,22 +159,29 @@ export default {
       this.$refs.homeScroll.scrollTo(0, 0, 1000);
     },
     // 是否显示返回顶部按钮
-    scrollPos(pos){
+    scrollPos(pos) {
       // console.log(pos);
-      this.backTopShow = (-pos.y) > 1000 ? true : false;
+      // 判断回到顶部按钮是否显示
+      this.backTopShow = -pos.y > 1000 ? true : false;
+
+      // 决定tabControl是否吸顶（是否给它position:fixed属性）
+      this.isTabFixed = -pos.y > this.tabOffsetTop ? true : false;
     },
     // 上拉加载更多
-    loadMore(){
+    loadMore() {
       // console.log("上拉加载更多");
       this.getGoodsList(this.currentTab);
-    }
-
+    },
   },
   mounted() {
     this.getData();
     this.getGoodsList("pop");
     this.getGoodsList("new");
     this.getGoodsList("sell");
+
+    // 防抖函数的使用
+    const refresh = utils.debounce(this.$refs.homeScroll.refresh, 100);
+    refresh();
   },
 };
 </script>
@@ -159,28 +189,28 @@ export default {
 <style lang="less" scoped>
 #home {
   height: 100%;
-  padding-top: 43px;
+  // padding-top: 43px;
   .nav-bar {
     background: var(--color-tint);
     color: white;
     font-size: 22px;
     font-weight: bold;
+  }
+  .tab-control-top{
+    // border: 1px solid red;
     position: fixed;
-    top: 0;
+    top: 42px;
+    z-index: 999;
+    background: white;
+  }
+  .scroll-wrapper {
+    position: fixed;
+    top: 43px;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 999;
-  }
-  .scroll-wrapper {
     height: calc(100vh - 92px);
     overflow: hidden;
-    .tab-control {
-      background: white;
-      position: sticky;
-      top: 44px;
-      z-index: 9999;
-    }
   }
 }
 </style>

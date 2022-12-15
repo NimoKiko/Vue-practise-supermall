@@ -25,7 +25,9 @@ export default {
   props: {
     popular: {
       type: Array,
-      default: {},
+      default() {
+        return [];
+      },
     },
   },
   // 局部注册的组件

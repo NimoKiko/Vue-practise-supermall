@@ -1,7 +1,7 @@
 <template>
   <swiper>
     <swiper-item v-for="item in banners">
-        <img :src="item.image" alt="">
+        <img :src="item.image" alt="" @load="imgLoad">
     </swiper-item>
   </swiper>
 </template>
@@ -11,6 +11,7 @@ import {Swiper,SwiperItem} from "@/components/common/swiper"
 export default {
   data() {
     return {
+      isLoad: false
     }
   },
   props:{
@@ -24,7 +25,7 @@ export default {
   watch:{
     banners:{
       handler(newval) {
-        console.log(newval);
+        // console.log(newval);
       }
     }
   },
@@ -32,6 +33,15 @@ export default {
     Swiper,
     SwiperItem
   },
+  methods:{
+    imgLoad(){
+      if(!this.isLoad) {
+        this.$emit("swiperImgLoad");
+        this.isLoad = true;
+      }
+
+    }
+  }
 }
 </script>
 
