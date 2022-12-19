@@ -2,7 +2,7 @@
   功能：功能描述
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月13日 11:21:27
+  时间：2022年12月19日 17:06:11
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,39 +10,46 @@
   修改时间：
 -->
 <template>
-  <div class="goods-item" @click="goodsItemClick">
-    <img :src="goodsItem.show.img" alt="" />
-    <p class="title">{{ goodsItem.title }}</p>
-    <div class="content">
-      <span class="price">{{ goodsItem.orgPrice }}</span>
-      <img
-        class="collect-icon"
-        src="@/assets/images/home/collect_icon.png"
-        alt=""
-      />
-      <span class="collect">{{ goodsItem.cfav }}</span>
-    </div>
+  <div id="detail-nav-bar">
+    <NavBar class="nav-bar">
+      <template #nav-center>
+        <div class="nav-center">
+          <div
+            class="title"
+            v-for="(item, index) in titles"
+            :class="{ active: index == currentIndex }"
+            @click="navClick(index)"
+          >
+            {{ item }}
+          </div>
+        </div>
+      </template>
+      <template #nav-left>
+        <div class="nav-left" @click="back">
+          <img src="@/assets/images/fanhui.png" alt="" />
+        </div>
+      </template>
+    </NavBar>
   </div>
 </template>
 
 <script>
+import NavBar from "@/components/common/navbar/NavBar.vue";
 export default {
   // 组件名称
-  name: "GoodsListItem",
+  name: "demo",
   // 组件参数 接收来自父组件的数据
-  props: {
-    goodsItem: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
+  props: {},
   // 局部注册的组件
-  components: {},
+  components: {
+    NavBar,
+  },
   // 组件状态值
   data() {
-    return {};
+    return {
+      titles: ["商品", "参数", "评论", "推荐"],
+      currentIndex: 0,
+    };
   },
   // 计算属性
   computed: {},
@@ -50,11 +57,14 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    // 点击跳转到详情页
-    goodsItemClick() {
-      let id = this.goodsItem.iid;
-      this.$router.push(`/detail/${id}`)
+    // 导航栏点击事件
+    navClick(index){
+      this.currentIndex = index;
     },
+    // 返回上一页
+    back(){
+      this.$router.back();
+    }
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
@@ -109,40 +119,32 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-.goods-item {
-  margin-top: 15px;
-  position: relative;
-  width: 45%;
-  img {
-    width: 100%;
-    border-radius: 10px;
-  }
-  .title {
-    width: 100%; /* 定好宽度 */
-    height: 15px; /* 高度根据需求要不要 */
-    // 多出部分用省略号表示
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 16px;
-  }
-  .content {
-    // border: 1px solid red;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    .price {
-      font-weight: bold;
+#detail-nav-bar {
+  width: 100%;
+  .nav-bar {
+    background: white;
+    font-size: 18px;
+    .nav-center {
+      width: 100%;
+      display: flex;
+      .title {
+        flex: 1;
+      }
+      .active {
+        flex: 1;
+        color: var(--color-tint);
+        font-weight: bold;
+      }
     }
-    .collect {
-      position: absolute;
-      right: 20%;
-    }
-    .collect-icon {
-      position: absolute;
-      width: 25px;
-      right: 10px;
+    .nav-left {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 30px;
+        height: 30px;
+      }
     }
   }
 }

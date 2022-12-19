@@ -1,8 +1,8 @@
 <!--
-  功能：功能描述
+  功能：商品详情页
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月13日 11:21:27
+  时间：2022年12月19日 16:29:09
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,52 +10,34 @@
   修改时间：
 -->
 <template>
-  <div class="goods-item" @click="goodsItemClick">
-    <img :src="goodsItem.show.img" alt="" />
-    <p class="title">{{ goodsItem.title }}</p>
-    <div class="content">
-      <span class="price">{{ goodsItem.orgPrice }}</span>
-      <img
-        class="collect-icon"
-        src="@/assets/images/home/collect_icon.png"
-        alt=""
-      />
-      <span class="collect">{{ goodsItem.cfav }}</span>
-    </div>
+  <div id="detail">
+    <DetailNavBar></DetailNavBar>
   </div>
 </template>
 
 <script>
+import DetailNavBar from "./childCpn/DetailNavBar.vue"
 export default {
   // 组件名称
-  name: "GoodsListItem",
+  name: "demo",
   // 组件参数 接收来自父组件的数据
-  props: {
-    goodsItem: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
+  props: {},
   // 局部注册的组件
-  components: {},
+  components: {
+    DetailNavBar
+  },
   // 组件状态值
   data() {
-    return {};
+    return {
+      iid: null,
+    };
   },
   // 计算属性
   computed: {},
   // 侦听器
   watch: {},
   // 组件方法
-  methods: {
-    // 点击跳转到详情页
-    goodsItemClick() {
-      let id = this.goodsItem.iid;
-      this.$router.push(`/detail/${id}`)
-    },
-  },
+  methods: {},
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
    * 在实例初始化之后，组件属性计算之前，如data属性等
@@ -73,7 +55,9 @@ export default {
    * el 被新创建的 vm.$ el 替换，并挂载到实例上去之后调用该钩子。
    * 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$ el 也在文档内。
    */
-  mounted() {},
+  mounted() {
+    // console.log(this.$route.params);
+  },
   /**
    * 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
    * 你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
@@ -87,7 +71,16 @@ export default {
   /**
    * keep-alive 组件激活时调用。 仅针对keep-alive 组件有效
    */
-  activated() {},
+  activated() {
+    this.iid = this.$route.params.iid;
+    console.log(this.iid);
+    let params = {
+      iid: this.iid,
+    };
+    this.$store.dispatch("getGoodsDetailById", params).then((res) => {
+      console.log(res);
+    });
+  },
   /**
    * keep-alive 组件停用时调用。 仅针对keep-alive 组件有效
    */
@@ -109,41 +102,6 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-.goods-item {
-  margin-top: 15px;
-  position: relative;
-  width: 45%;
-  img {
-    width: 100%;
-    border-radius: 10px;
-  }
-  .title {
-    width: 100%; /* 定好宽度 */
-    height: 15px; /* 高度根据需求要不要 */
-    // 多出部分用省略号表示
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 16px;
-  }
-  .content {
-    // border: 1px solid red;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    .price {
-      font-weight: bold;
-    }
-    .collect {
-      position: absolute;
-      right: 20%;
-    }
-    .collect-icon {
-      position: absolute;
-      width: 25px;
-      right: 10px;
-    }
-  }
+#detail {
 }
 </style>
