@@ -1,8 +1,8 @@
 <!--
-  功能：商品详情页
+  功能：商品详细信息组件
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月19日 16:29:09
+  时间：2022年12月26日 15:36:50
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,36 +10,39 @@
   修改时间：
 -->
 <template>
-  <div id="detail">
-    <DetailNavBar></DetailNavBar>
-    <DetailSwipper :topImages="topImages"></DetailSwipper>
-    <DetailGoodsInfo :goods="goodsInfo"></DetailGoodsInfo>
+  <div v-if="Object.keys(goods).length !== 0" class="detail-goodsInfo">
+    <div class="detail-title">{{ goods.title }}</div>
+    <div class="detail-price-box">
+      <div class="realPrice">{{goods.realPrice}}</div>
+      <div class="oldPrice">{{goods.oldPrice}}</div>
+      <div class="discount">{{goods.discount}}</div>
+    </div>
+    <div class="detail-sellInfo-box">
+      <div class="sell">{{goods.columns[0]}}</div>
+      <div class="collect">{{goods.columns[1]}}</div>
+      <div class="deliver">{{goods.services[goods.services.length-1].name}}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import DetailNavBar from "./childCpn/DetailNavBar.vue"
-import DetailSwipper from "./childCpn/DetailSwipper.vue"
-import DetailGoodsInfo from "./childCpn/DetailGoodsInfo.vue"
-import {Goods} from "@/request/home/homeRequest"
 export default {
   // 组件名称
   name: "demo",
   // 组件参数 接收来自父组件的数据
-  props: {},
-  // 局部注册的组件
-  components: {
-    DetailNavBar,
-    DetailSwipper,
-    DetailGoodsInfo
+  props: {
+    goods: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
   },
+  // 局部注册的组件
+  components: {},
   // 组件状态值
   data() {
-    return {
-      iid: null,
-      topImages:[],
-      goodsInfo: {},
-    };
+    return {};
   },
   // 计算属性
   computed: {},
@@ -64,9 +67,7 @@ export default {
    * el 被新创建的 vm.$ el 替换，并挂载到实例上去之后调用该钩子。
    * 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$ el 也在文档内。
    */
-  mounted() {
-    // console.log(this.$route.params);
-  },
+  mounted() {},
   /**
    * 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
    * 你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
@@ -80,24 +81,7 @@ export default {
   /**
    * keep-alive 组件激活时调用。 仅针对keep-alive 组件有效
    */
-  activated() {
-    this.iid = this.$route.params.iid;
-    console.log(this.iid);
-    let params = {
-      iid: this.iid,
-    };
-    this.$store.dispatch("getGoodsDetailById", params).then((res) => {
-      console.log(res);
-      let data = res.result;
-      // 获取顶部轮播数据
-      this.topImages = data.itemInfo.topImages;
-      // 获取商品介绍
-      this.goodsInfo = new Goods(data.itemInfo,data.columns,data.shopInfo.services);
-
-      console.log(this.goodsInfo);
-
-    });
-  },
+  activated() {},
   /**
    * keep-alive 组件停用时调用。 仅针对keep-alive 组件有效
    */
@@ -119,5 +103,57 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-
+.detail-goodsInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .detail-title {
+    margin-top: 5px;
+    width: 95%;
+    font-size: 20px;
+    line-height: 25px;
+  }
+  .detail-price-box{
+    width: 95%;
+    display: flex;
+    align-items: baseline;
+    .realPrice{
+      font-size: 28px;
+      color: var(--color-tint);
+      font-weight: bold;
+    }
+    .oldPrice{
+      font-size: 18px;
+      margin-left: 5px;
+      text-decoration: line-through;
+    }
+    .discount{
+      text-align: center;
+      width: 80px;
+      margin-left: 10px;
+      font-size: 18px;
+      background: var(--color-tint);
+      color: white;
+      border-radius: 10px;
+    }
+  }
+  .detail-sellInfo-box{
+    display: flex;
+    width: 95%;
+    margin-top: 5%;
+    color: rgb(142, 142, 142);
+    .sell{
+      flex: 1;
+    }
+    .collect{
+      flex: 1;
+      text-align: center;
+    }
+    .deliver{
+      flex: 1;
+      text-align: right;
+    }
+  }
+}
 </style>
