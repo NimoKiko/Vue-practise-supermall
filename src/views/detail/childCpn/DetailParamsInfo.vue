@@ -1,8 +1,8 @@
 <!--
-  功能：BScroll
+  功能：参数详情组件
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月14日 11:36:59
+  时间：2022年12月28日 10:24:25
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,82 +10,46 @@
   修改时间：
 -->
 <template>
-  <div class="wrapper" ref="BSwrapper">
-    <div class="content">
-      <slot></slot>
+  <div class="params-box">
+    <div class="size-box" v-for="item in params.size">
+      <div class="size-box-row" v-for="part in item">
+        <div class="size-box-row-item" v-for="one in part">{{ one }}</div>
+      </div>
+    </div>
+    <div class="otherInfo-box">
+      <div class="otherInfo-box-row" v-for="item in params.info">
+        <div class="text">{{item.key}}</div>
+        <div class="content">{{item.value}}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import BScroll from "better-scroll";
 export default {
   // 组件名称
-  name: "BScroll",
+  name: "DetailParamsInfo",
   // 组件参数 接收来自父组件的数据
   props: {
-    listenerFlag: {
-      type: Boolean,
-      default: false,
-    },
-    pullUpLoad: {
-      type: Boolean,
-      default: false,
+    params: {
+      type: Object,
+      default() {
+        return {};
+      },
     },
   },
   // 局部注册的组件
   components: {},
   // 组件状态值
   data() {
-    return {
-      scroll: null,
-    };
+    return {};
   },
   // 计算属性
   computed: {},
   // 侦听器
   watch: {},
   // 组件方法
-  methods: {
-    // 初始化BScroll
-    initBScroll() {
-      let wrapper = this.$refs.BSwrapper;
-      this.scroll = new BScroll(wrapper, {
-        probeType: 3,
-        click: true,
-        pullUpLoad: this.pullUpLoad,
-        observeDOM: true,
-        observeImage: true,
-      });
-    },
-    // 返回顶部
-    scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
-    },
-    // 监听滚动
-    scrollListener() {
-      this.scroll.on("scroll", (pos) => {
-        console.log(pos);
-        this.$emit("scrollPos", pos);
-      });
-    },
-    // 监听拉到底部
-    pullingUp() {
-      this.scroll.on("pullingUp", () => {
-        // console.log('上拉加载更多');
-        this.$emit("loadMore");
-      });
-    },
-    // 上拉结束
-    finishPullUp() {
-      this.scroll.finishPullUp();
-    },
-    // 重刷
-    refresh() {
-      // console.log("重刷了哦");
-      this.scroll.refresh();
-    },
-  },
+  methods: {},
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
    * 在实例初始化之后，组件属性计算之前，如data属性等
@@ -103,15 +67,7 @@ export default {
    * el 被新创建的 vm.$ el 替换，并挂载到实例上去之后调用该钩子。
    * 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$ el 也在文档内。
    */
-  mounted() {
-    this.initBScroll();
-    if (this.listenerFlag) {
-      this.scrollListener();
-    }
-    if (this.pullUpLoad) {
-      this.pullingUp();
-    }
-  },
+  mounted() {},
   /**
    * 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
    * 你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
@@ -146,4 +102,51 @@ export default {
 <!--使用了scoped属性之后，父组件的style样式将不会渗透到子组件中，-->
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.params-box {
+  width: 100%;
+  border-top: 10px solid rgb(242, 242, 242);
+  width: 100%;
+  .size-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .size-box-row {
+      width: 95%;
+      display: flex;
+      margin-top: 10px;
+      .size-box-row-item {
+        flex: 1;
+        text-align: center;
+        font-size: 18px;
+        border-bottom: 1px solid rgb(209, 209, 209);
+        padding: 10px 5px;
+      }
+    }
+  }
+  .otherInfo-box{
+    border-top: 10px solid rgb(242, 242, 242);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .otherInfo-box-row{
+      width: 90%;
+      display: flex;
+      margin-top: 10px;
+      border-bottom: 1px solid rgb(209, 209, 209);
+      padding: 8px 4px;
+      .text{
+        font-size: 18px;
+        width: 30%;
+        margin-left: 3%;
+      }
+      .content{
+        flex: 1;
+        color: var(--color-tint);
+      }
+    }
+  }
+}
+</style>

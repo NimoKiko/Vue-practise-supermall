@@ -11,7 +11,7 @@
 -->
 <template>
   <div id="detail">
-    <DetailNavBar class="detail-nav"></DetailNavBar>
+    <DetailNavBar @navClick="navClick" class="detail-nav"></DetailNavBar>
     <BScroll ref="scroll" class="content">
       <DetailSwipper :topImages="topImages"></DetailSwipper>
       <DetailBaseInfo :goods="goodsInfo"></DetailBaseInfo>
@@ -20,6 +20,8 @@
         :detailInfo="goodsDetail"
         @imageLoad="imageLoad"
       ></DetailGoodsInfo>
+      <DetailParamsInfo ref="params" :params="goodsParams"></DetailParamsInfo>
+      <DetailComment ref="comment" :comment="goodsComment"></DetailComment>
     </BScroll>
   </div>
 </template>
@@ -30,10 +32,12 @@ import DetailSwipper from "./childCpn/DetailSwipper.vue";
 import DetailBaseInfo from "./childCpn/DetailBaseInfo.vue";
 import DetailShopInfo from "./childCpn/DetailShopInfo.vue";
 import DetailGoodsInfo from "./childCpn/DetailGoodsInfo.vue";
+import DetailParamsInfo from "./childCpn/DetailParamsInfo.vue";
+import DetailComment from "./childCpn/DetailComment.vue";
 
 import BScroll from "@/components/common/scroll/BScroll.vue";
 
-import { Goods, Shop } from "@/request/home/homeRequest";
+import { Goods, Shop, Params } from "@/request/home/homeRequest";
 export default {
   // 组件名称
   name: "demo",
@@ -46,6 +50,8 @@ export default {
     DetailBaseInfo,
     DetailShopInfo,
     DetailGoodsInfo,
+    DetailParamsInfo,
+    DetailComment,
     BScroll,
   },
   // 组件状态值
@@ -56,6 +62,8 @@ export default {
       goodsInfo: {},
       shopInfo: {},
       goodsDetail: {},
+      goodsParams: {},
+      goodsComment: [],
     };
   },
   // 计算属性
@@ -66,7 +74,26 @@ export default {
   methods: {
     imageLoad() {
       this.$refs.scroll.refresh();
+      console.log(111);
       // this.getThemeTopY();
+    },
+    // 监听navbar点击事件
+    navClick(index) {
+      console.log(index);
+      let paramsNode = this.$refs.params.$el;
+      let commentNode = this.$refs.comment.$el;
+      switch (index) {
+        case 0:
+          this.$refs.scroll.scrollTo(0, 0, 1000);
+          break;
+        case 1:
+          this.$refs.scroll.scrollTo(0, -paramsNode.offsetTop, 1000);
+          break;
+        case 2:
+          this.$refs.scroll.scrollTo(0, -commentNode.offsetTop, 1000);
+          break;
+      }
+      console.log(paramsNode.offsetTop);
     },
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
@@ -123,6 +150,10 @@ export default {
       this.shopInfo = new Shop(data.shopInfo);
       // 保存商品详情数据
       this.goodsDetail = data.detailInfo;
+      // 保存商品参数信息
+      this.goodsParams = new Params(data.itemParams.info, data.itemParams.rule);
+      // 保存商品评论信息
+      this.goodsComment = data.rate.cRate !== 0 ? data.rate.list : "";
     });
   },
   /**

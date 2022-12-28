@@ -1,8 +1,8 @@
 <!--
-  功能：BScroll
+  功能：商品评论组件
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月14日 11:36:59
+  时间：2022年12月28日 11:47:58
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,36 +10,58 @@
   修改时间：
 -->
 <template>
-  <div class="wrapper" ref="BSwrapper">
-    <div class="content">
-      <slot></slot>
+  <div class="comment-info-wrap" v-if="Object.keys(comment).length !== 0">
+    <div class="comment-title flex">
+      <div>用户评价</div>
+      <div>更多</div>
+    </div>
+    <div v-for="item in comment">
+      <div class="comment-user-info">
+        <span><img :src="item.user.avatar" alt="" class="avatar" /></span>
+        <span>{{ item.user.uname }}</span>
+      </div>
+      <div class="comment-text">{{ item.content }}</div>
+      <div class="comment-goods-info">
+        <span class="comment-time">{{ showDate(item.created) }}</span>
+        <span>{{ item.style }}</span>
+      </div>
+      <div class="flex">
+        <div class="comment-info-images" v-for="item in item.images">
+          <img :src="item" alt="" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import BScroll from "better-scroll";
+import util from "@/common/utils/utils";
 export default {
   // 组件名称
-  name: "BScroll",
+  name: "DetailComment",
   // 组件参数 接收来自父组件的数据
   props: {
-    listenerFlag: {
-      type: Boolean,
-      default: false,
-    },
-    pullUpLoad: {
-      type: Boolean,
-      default: false,
+    comment: {
+      type: Array,
+      default() {
+        return [];
+      },
     },
   },
   // 局部注册的组件
   components: {},
   // 组件状态值
   data() {
-    return {
-      scroll: null,
-    };
+    return {};
+  },
+  // 过滤器
+  filters: {
+    showDate(value) {
+      //将时间戳转换成date对象
+      const date = new Date(value * 1000);
+      //将date进行格式化
+      return formatDate(date, "yyyy-MM-dd");
+    },
   },
   // 计算属性
   computed: {},
@@ -47,43 +69,11 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    // 初始化BScroll
-    initBScroll() {
-      let wrapper = this.$refs.BSwrapper;
-      this.scroll = new BScroll(wrapper, {
-        probeType: 3,
-        click: true,
-        pullUpLoad: this.pullUpLoad,
-        observeDOM: true,
-        observeImage: true,
-      });
-    },
-    // 返回顶部
-    scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
-    },
-    // 监听滚动
-    scrollListener() {
-      this.scroll.on("scroll", (pos) => {
-        console.log(pos);
-        this.$emit("scrollPos", pos);
-      });
-    },
-    // 监听拉到底部
-    pullingUp() {
-      this.scroll.on("pullingUp", () => {
-        // console.log('上拉加载更多');
-        this.$emit("loadMore");
-      });
-    },
-    // 上拉结束
-    finishPullUp() {
-      this.scroll.finishPullUp();
-    },
-    // 重刷
-    refresh() {
-      // console.log("重刷了哦");
-      this.scroll.refresh();
+    showDate(value) {
+      //将时间戳转换成date对象
+      const date = new Date(value * 1000);
+      //将date进行格式化
+      return util.formatDate(date, "yyyy-MM-dd");
     },
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
@@ -103,15 +93,7 @@ export default {
    * el 被新创建的 vm.$ el 替换，并挂载到实例上去之后调用该钩子。
    * 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$ el 也在文档内。
    */
-  mounted() {
-    this.initBScroll();
-    if (this.listenerFlag) {
-      this.scrollListener();
-    }
-    if (this.pullUpLoad) {
-      this.pullingUp();
-    }
-  },
+  mounted() {},
   /**
    * 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
    * 你可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
@@ -146,4 +128,43 @@ export default {
 <!--使用了scoped属性之后，父组件的style样式将不会渗透到子组件中，-->
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.comment-info-wrap {
+  border-top: 10px solid rgb(242, 242, 242);
+  padding: 0 8px;
+  font-size: 14px;
+  border-bottom: 4px solid #ececec;
+  .comment-title {
+    justify-content: space-between;
+    border-bottom: 1px solid #ececec;
+    padding: 10px 4px;
+  }
+  .comment-user-info {
+    padding: 10px 0;
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+  }
+  .comment-text {
+    line-height: 20px;
+  }
+  .comment-goods-info {
+    color: #999;
+    margin: 4px 0;
+    .comment-time {
+      margin-right: 10px;
+    }
+  }
+  .comment-info-images {
+    img {
+      width: 60px;
+      height: 60px;
+      margin-right: 6px;
+    }
+  }
+}
+</style>

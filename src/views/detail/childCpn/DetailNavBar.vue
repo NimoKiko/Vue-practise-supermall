@@ -47,7 +47,7 @@ export default {
   // 组件状态值
   data() {
     return {
-      titles: ["商品", "参数", "评论", "推荐"],
+      titles: ["商品", "参数", "评论"],
       currentIndex: 0,
     };
   },
@@ -60,6 +60,7 @@ export default {
     // 导航栏点击事件
     navClick(index){
       this.currentIndex = index;
+      this.$emit("navClick",index);
     },
     // 返回上一页
     back(){

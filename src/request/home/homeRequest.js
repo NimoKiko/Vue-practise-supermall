@@ -48,3 +48,12 @@ export class Shop {
     this.goodsCount = shopInfo.cGoods;
   }
 }
+
+// 导出商品参数类
+export class Params {
+  constructor(info, rule){
+    this.info = info.set;
+    this.size = rule.tables;
+    this.image = info.images ? info.images[0] : "";
+  }
+}
