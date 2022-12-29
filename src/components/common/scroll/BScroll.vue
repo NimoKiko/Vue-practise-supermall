@@ -65,7 +65,7 @@ export default {
     // 监听滚动
     scrollListener() {
       this.scroll.on("scroll", (pos) => {
-        console.log(pos);
+        // console.log(pos);
         this.$emit("scrollPos", pos);
       });
     },

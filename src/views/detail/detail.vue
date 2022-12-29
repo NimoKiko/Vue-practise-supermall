@@ -11,8 +11,17 @@
 -->
 <template>
   <div id="detail">
-    <DetailNavBar @navClick="navClick" class="detail-nav"></DetailNavBar>
-    <BScroll ref="scroll" class="content">
+    <DetailNavBar
+      ref="navBar"
+      @navClick="navClick"
+      class="detail-nav"
+    ></DetailNavBar>
+    <BScroll
+      ref="scroll"
+      :listenerFlag="true"
+      class="content"
+      @scrollPos="scrollPos"
+    >
       <DetailSwipper :topImages="topImages"></DetailSwipper>
       <DetailBaseInfo :goods="goodsInfo"></DetailBaseInfo>
       <DetailShopInfo :shop="shopInfo"></DetailShopInfo>
@@ -23,6 +32,8 @@
       <DetailParamsInfo ref="params" :params="goodsParams"></DetailParamsInfo>
       <DetailComment ref="comment" :comment="goodsComment"></DetailComment>
     </BScroll>
+    <DetailBotBar @addCart="addCart"></DetailBotBar>
+    <BackToTop v-show="backTopShow" @click="backToTop"></BackToTop>
   </div>
 </template>
 
@@ -34,15 +45,19 @@ import DetailShopInfo from "./childCpn/DetailShopInfo.vue";
 import DetailGoodsInfo from "./childCpn/DetailGoodsInfo.vue";
 import DetailParamsInfo from "./childCpn/DetailParamsInfo.vue";
 import DetailComment from "./childCpn/DetailComment.vue";
+import DetailBotBar from "./childCpn/DetailBotBar.vue";
 
 import BScroll from "@/components/common/scroll/BScroll.vue";
 
 import { Goods, Shop, Params } from "@/request/home/homeRequest";
+import { backToTopMixin } from "@/common/mixin";
 export default {
   // 组件名称
   name: "demo",
   // 组件参数 接收来自父组件的数据
   props: {},
+  // 混入
+  mixins: [backToTopMixin],
   // 局部注册的组件
   components: {
     DetailNavBar,
@@ -52,6 +67,7 @@ export default {
     DetailGoodsInfo,
     DetailParamsInfo,
     DetailComment,
+    DetailBotBar,
     BScroll,
   },
   // 组件状态值
@@ -64,6 +80,8 @@ export default {
       goodsDetail: {},
       goodsParams: {},
       goodsComment: [],
+      navPos: [0, 0, 0],
+      currentIndex: 0,
     };
   },
   // 计算属性
@@ -75,7 +93,8 @@ export default {
     imageLoad() {
       this.$refs.scroll.refresh();
       console.log(111);
-      // this.getThemeTopY();
+      this.getNavPos();
+      console.log(this.navPos);
     },
     // 监听navbar点击事件
     navClick(index) {
@@ -93,7 +112,49 @@ export default {
           this.$refs.scroll.scrollTo(0, -commentNode.offsetTop, 1000);
           break;
       }
-      console.log(paramsNode.offsetTop);
+      // console.log(paramsNode.offsetTop);
+    },
+    // 监听滚动
+    scrollPos(pos) {
+      let position = (-pos.y + 44).toFixed(0);
+      if (position >= this.navPos[0] && position < this.navPos[1]) {
+        this.$refs.navBar.currentIndex = 0;
+      } else if (position >= this.navPos[1] && position < this.navPos[2]) {
+        this.$refs.navBar.currentIndex = 1;
+      } else if (position >= this.navPos[2]) {
+        this.$refs.navBar.currentIndex = 2;
+      }
+
+      // 监听是否显示回到顶部按钮
+      this.backToTopListener(pos);
+    },
+    // 获取顶部导航栏对应组件的offsetTop
+    getNavPos() {
+      this.navPos = [];
+      let paramsNode = this.$refs.params.$el;
+      let commentNode = this.$refs.comment.$el;
+
+      this.navPos.push(0);
+      this.navPos.push(paramsNode.offsetTop);
+      this.navPos.push(commentNode.offsetTop);
+    },
+    // 监听回到顶部
+    backToTop() {
+      this.$refs.scroll.scrollTo(0, 0, 1000);
+    },
+    // 添加到购物车
+    addCart(){
+      // 获取商品信息
+      const product = {};
+      product.img = this.topImages[0];
+      product.title = this.goodsInfo.title;
+      product.desc = this.goodsInfo.desc;
+      product.price = this.goodsInfo.realPrice;
+      product.iid = this.iid;
+
+      // 将商品添加到购物车
+      console.log(product);
+      this.$store.commit("SAVE_PRODUCT",product);
     },
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
@@ -114,6 +175,8 @@ export default {
    * 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$ el 也在文档内。
    */
   mounted() {
+    // let scroll = this.$refs.scroll;
+    // scroll.scrollListener();
     // console.log(this.$route.params);
   },
   /**
@@ -188,7 +251,7 @@ export default {
     z-index: 9;
   }
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 43px);
   }
 }
 </style>

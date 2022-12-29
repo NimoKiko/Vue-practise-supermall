@@ -53,12 +53,14 @@ import Scroll from "@/components/common/scroll/BScroll.vue";
 import NavBar from "@/components/common/navbar/NavBar.vue";
 import TabControl from "@/components/common/tabcontrol/TabControl.vue";
 import GoodsList from "@/components/content/goods/GoodsList.vue";
-import BackToTop from "@/components/content/backtotop/BackToTop.vue";
+// import BackToTop from "@/components/content/backtotop/BackToTop.vue";
 
 // 工具类
 import utils from "@/common/utils/utils";
+import { backToTopMixin } from "@/common/mixin";
 
 export default {
+  mixins: [backToTopMixin],
   data() {
     return {
       banner: [],
@@ -70,7 +72,7 @@ export default {
       },
       currentTab: "pop",
       BScroll: null,
-      backTopShow: false,
+      // backTopShow: false,
       tabOffsetTop: 684,
       isTabFixed: false,
     };
@@ -83,7 +85,6 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackToTop,
   },
   computed: {
     showGoods() {
@@ -162,11 +163,12 @@ export default {
     scrollPos(pos) {
       // console.log(pos);
       // 判断回到顶部按钮是否显示
-      this.backTopShow = -pos.y > 1000 ? true : false;
+      this.backToTopListener(pos);
 
       // 决定tabControl是否吸顶（是否给它position:fixed属性）
       this.isTabFixed = -pos.y > this.tabOffsetTop ? true : false;
     },
+    // 监听是否显示返回顶部按钮
     // 上拉加载更多
     loadMore() {
       // console.log("上拉加载更多");
@@ -196,7 +198,7 @@ export default {
     font-size: 22px;
     font-weight: bold;
   }
-  .tab-control-top{
+  .tab-control-top {
     // border: 1px solid red;
     position: fixed;
     top: 42px;
