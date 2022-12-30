@@ -14,7 +14,10 @@
     <BScroll ref="scroll" class="scroll">
       <div class="cart-list-item-box">
         <div class="cart-list-item" v-for="item in list">
-          {{ item }}
+          <img class="img" :src="item.img" alt="" />
+          <p class="title">{{ item.title }}</p>
+          <p class="price">{{ item.price }}￥</p>
+          <p class="count">x{{ item.count }}</p>
         </div>
       </div>
     </BScroll>
@@ -117,12 +120,40 @@ export default {
       flex-direction: column;
       align-items: center;
       .cart-list-item {
-        width: 90%;
+        width: 100%;
         height: 120px;
         border-radius: 10px;
         margin-top: 10px;
+        border-bottom: 5px solid rgb(228, 228, 228);
         // border: 1px solid red;
-        background: rgb(240, 240, 240);
+        position: relative;
+        .img {
+          position: absolute;
+          left: 5%;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 100px;
+          height: 100px;
+        }
+        .title {
+          width: 60%;
+          position: absolute;
+          right: 5%;
+          top: 10%;
+          line-height: 22px;
+        }
+        .price {
+          // border: 1px solid red;
+          position: absolute;
+          left: 35%;
+          bottom: 10%;
+          color: var(--color-tint);
+        }
+        .count {
+          position: absolute;
+          left: 88%;
+          bottom: 10%;
+        }
       }
     }
   }
