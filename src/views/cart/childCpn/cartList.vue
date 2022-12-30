@@ -1,8 +1,8 @@
 <!--
-  功能：购物车
+  功能：购物车列表组件
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月29日 15:21:38
+  时间：2022年12月30日 11:48:55
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,46 +10,41 @@
   修改时间：
 -->
 <template>
-  <div id="cart">
-    <NavBar class="nav-bar">
-      <template #nav-center>
-        <div>购物车({{cartLength}})</div>
-      </template>
-    </NavBar>
-    <!-- 商品列表 -->
-    <CartList :list="cartList"></CartList>
-    <!-- 底部汇总 -->
+  <div class="cart-list">
+    <BScroll ref="scroll" class="scroll">
+      <div class="cart-list-item-box">
+        <div class="cart-list-item" v-for="item in list">
+          {{ item }}
+        </div>
+      </div>
+    </BScroll>
   </div>
 </template>
 
 <script>
-import CartList from "./childCpn/cartList.vue"
-
-import NavBar from "@/components/common/navbar/NavBar.vue";
-import { mapState, mapGetters } from "vuex";
+import BScroll from "@/components/common/scroll/BScroll.vue";
 export default {
   // 组件名称
   name: "demo",
   // 组件参数 接收来自父组件的数据
-  props: {},
+  props: {
+    list: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+  },
   // 局部注册的组件
   components: {
-    NavBar,
-    CartList
+    BScroll,
   },
   // 组件状态值
   data() {
     return {};
   },
   // 计算属性
-  computed: {
-    ...mapState({
-      cartList: (state) => state.home.cartList,
-    }),
-    ...mapGetters({
-      cartLength: "cartLength",
-    })
-  },
+  computed: {},
   // 侦听器
   watch: {},
   // 组件方法
@@ -85,7 +80,9 @@ export default {
   /**
    * keep-alive 组件激活时调用。 仅针对keep-alive 组件有效
    */
-  activated() {},
+  activated() {
+    this.$refs.scroll.refresh();
+  },
   /**
    * keep-alive 组件停用时调用。 仅针对keep-alive 组件有效
    */
@@ -107,13 +104,27 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-#cart {
+.cart-list {
   width: 100%;
-  .nav-bar {
-    background: var(--color-tint);
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
+  height: 100%;
+  .scroll {
+    overflow: hidden;
+    height: calc(100vh - 44px - 49px);
+
+    .cart-list-item-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .cart-list-item {
+        width: 90%;
+        height: 120px;
+        border-radius: 10px;
+        margin-top: 10px;
+        // border: 1px solid red;
+        background: rgb(240, 240, 240);
+      }
+    }
   }
 }
 </style>

@@ -1,9 +1,11 @@
 import actions from "./actions"
 import mutations from "./mutations"
+import getters from "./getters"
 export default {
   state:{
-    goods:[]
+    cartList:[]
   },
   actions:actions,
-  mutations:mutations
+  mutations:mutations,
+  getters:getters
 }

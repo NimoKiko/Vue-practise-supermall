@@ -154,7 +154,7 @@ export default {
 
       // 将商品添加到购物车
       console.log(product);
-      this.$store.commit("SAVE_PRODUCT",product);
+      this.$store.dispatch("saveCart",product)
     },
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
