@@ -1,8 +1,8 @@
 <!--
-  功能：购物车
+  功能：购物车底部栏
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月29日 15:21:38
+  时间：2023年01月03日 15:16:53
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,25 +10,21 @@
   修改时间：
 -->
 <template>
-  <div id="cart">
-    <NavBar class="nav-bar">
-      <template #nav-center>
-        <div>购物车({{cartLength}})</div>
-      </template>
-    </NavBar>
-    <!-- 商品列表 -->
-    <CartList :list="cartList"></CartList>
-    <!-- 底部汇总 -->
-    <CartBottomBar class="bottom-bar"></CartBottomBar>
+  <div class="bottom-bar">
+    <div class="check-btn-box">
+      <span>全选</span>
+      <CheckButton @click="allCheckedClick" :isChecked="allChecked" class="check-button"></CheckButton>
+    </div>
+    <div class="total-cost-box">
+      <span>合计：{{total}}￥</span>
+    </div>
+    <div class="buy">去结算({{totalChecked}})</div>
   </div>
 </template>
 
 <script>
-import CartList from "./childCpn/cartList.vue"
-import CartBottomBar from "./childCpn/CartBottomBar.vue"
-
-import NavBar from "@/components/common/navbar/NavBar.vue";
-import { mapState, mapGetters } from "vuex";
+import {mapState, mapGetters} from "vuex"
+import CheckButton from "@/components/content/checkButton/CheckButton.vue";
 export default {
   // 组件名称
   name: "demo",
@@ -36,27 +32,33 @@ export default {
   props: {},
   // 局部注册的组件
   components: {
-    NavBar,
-    CartList,
-    CartBottomBar
+    CheckButton,
   },
   // 组件状态值
   data() {
-    return {};
+    return {
+      allChecked: false,
+    };
   },
   // 计算属性
   computed: {
     ...mapState({
-      cartList: (state) => state.home.cartList,
+      total: (state) => state.home.totalCost,
+      totalChecked: (state) => state.home.totalChecked
     }),
     ...mapGetters({
-      cartLength: "cartLength",
+      checkedCount: "checkedCount"
     })
   },
   // 侦听器
   watch: {},
   // 组件方法
-  methods: {},
+  methods: {
+    allCheckedClick(){
+      this.allChecked = !this.allChecked;
+      this.$store.dispatch("totalCheckedClick",this.allChecked);
+    }
+  },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
    * 在实例初始化之后，组件属性计算之前，如data属性等
@@ -110,12 +112,46 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-#cart {
+.bottom-bar {
+  height: 50px;
   width: 100%;
-  .nav-bar {
-    background: var(--color-tint);
+  background: rgb(255, 132, 44);
+  position: fixed;
+  bottom: 50px;
+  display: flex;
+  align-items: center;
+  .check-btn-box {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    // border: 1px solid red;
+    text-align: center;
+    .check-button {
+      margin-left: 5px;
+    }
+    span {
+      color: white;
+      // font-weight: bold;
+    }
+  }
+  .total-cost-box {
+    span {
+      color: white;
+    }
+  }
+  .buy{
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 100px;
+    background: rgb(217, 34, 34);
     color: white;
-    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
     font-weight: bold;
   }
 }

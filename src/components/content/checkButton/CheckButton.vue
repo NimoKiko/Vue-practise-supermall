@@ -1,8 +1,8 @@
 <!--
-  功能：购物车
+  功能：选中按钮
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月29日 15:21:38
+  时间：2023年01月03日 14:18:24
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,49 +10,30 @@
   修改时间：
 -->
 <template>
-  <div id="cart">
-    <NavBar class="nav-bar">
-      <template #nav-center>
-        <div>购物车({{cartLength}})</div>
-      </template>
-    </NavBar>
-    <!-- 商品列表 -->
-    <CartList :list="cartList"></CartList>
-    <!-- 底部汇总 -->
-    <CartBottomBar class="bottom-bar"></CartBottomBar>
+  <div class="check-button" :class="{ check: isChecked }">
+    <img class="check-btn-img" src="@/assets/images/cart/tick.svg" alt="" />
   </div>
 </template>
 
 <script>
-import CartList from "./childCpn/cartList.vue"
-import CartBottomBar from "./childCpn/CartBottomBar.vue"
-
-import NavBar from "@/components/common/navbar/NavBar.vue";
-import { mapState, mapGetters } from "vuex";
 export default {
   // 组件名称
   name: "demo",
   // 组件参数 接收来自父组件的数据
-  props: {},
-  // 局部注册的组件
-  components: {
-    NavBar,
-    CartList,
-    CartBottomBar
+  props: {
+    isChecked: {
+      type: Boolean,
+      default: false,
+    },
   },
+  // 局部注册的组件
+  components: {},
   // 组件状态值
   data() {
     return {};
   },
   // 计算属性
-  computed: {
-    ...mapState({
-      cartList: (state) => state.home.cartList,
-    }),
-    ...mapGetters({
-      cartLength: "cartLength",
-    })
-  },
+  computed: {},
   // 侦听器
   watch: {},
   // 组件方法
@@ -110,13 +91,17 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-#cart {
-  width: 100%;
-  .nav-bar {
-    background: var(--color-tint);
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
+.check-button {
+  // border: 1px solid black;
+  background: rgb(229, 229, 229);
+  width: fit-content;
+  border-radius: 100%;
+  .check-btn-img {
+    width: 20px;
+    height: 20px;
   }
+}
+.check {
+  background: var(--color-tint);
 }
 </style>

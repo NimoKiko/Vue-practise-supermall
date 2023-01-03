@@ -3,7 +3,9 @@ import mutations from "./mutations"
 import getters from "./getters"
 export default {
   state:{
-    cartList:[]
+    cartList:[],
+    totalCost:0,
+    totalChecked:0
   },
   actions:actions,
   mutations:mutations,

@@ -151,10 +151,12 @@ export default {
       product.desc = this.goodsInfo.desc;
       product.price = this.goodsInfo.realPrice;
       product.iid = this.iid;
+      product.isChecked = false;
 
       // 将商品添加到购物车
       console.log(product);
-      this.$store.dispatch("saveCart",product)
+      this.$store.dispatch("saveCart",product);
+
     },
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除

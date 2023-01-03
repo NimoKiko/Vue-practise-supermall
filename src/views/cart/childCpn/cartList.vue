@@ -13,7 +13,8 @@
   <div class="cart-list">
     <BScroll ref="scroll" class="scroll">
       <div class="cart-list-item-box">
-        <div class="cart-list-item" v-for="item in list">
+        <div class="cart-list-item" v-for="(item,index) in list">
+          <CheckButton @click="checkClick(index)" :isChecked="item.isChecked"  class="check-button"></CheckButton>
           <img class="img" :src="item.img" alt="" />
           <p class="title">{{ item.title }}</p>
           <p class="price">{{ item.price }}￥</p>
@@ -26,6 +27,7 @@
 
 <script>
 import BScroll from "@/components/common/scroll/BScroll.vue";
+import CheckButton from "@/components/content/checkButton/CheckButton.vue"
 export default {
   // 组件名称
   name: "demo",
@@ -41,6 +43,7 @@ export default {
   // 局部注册的组件
   components: {
     BScroll,
+    CheckButton
   },
   // 组件状态值
   data() {
@@ -51,7 +54,12 @@ export default {
   // 侦听器
   watch: {},
   // 组件方法
-  methods: {},
+  methods: {
+    checkClick(index){
+      this.list[index].isChecked = !this.list[index].isChecked;
+      this.$store.dispatch("totalCount",index)
+    }
+  },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
    * 在实例初始化之后，组件属性计算之前，如data属性等
@@ -112,7 +120,7 @@ export default {
   height: 100%;
   .scroll {
     overflow: hidden;
-    height: calc(100vh - 44px - 49px);
+    height: calc(100vh - 44px - 49px - 50px);
 
     .cart-list-item-box {
       width: 100%;
@@ -121,19 +129,26 @@ export default {
       align-items: center;
       .cart-list-item {
         width: 100%;
-        height: 120px;
+        height: 150px;
         border-radius: 10px;
         margin-top: 10px;
         border-bottom: 5px solid rgb(228, 228, 228);
         // border: 1px solid red;
         position: relative;
+        .check-button{
+          position: absolute;
+          left: 1%;
+          top: 50%;
+          transform: translateY(-50%);
+        }
         .img {
           position: absolute;
-          left: 5%;
+          left: 8%;
           top: 50%;
           transform: translateY(-50%);
           width: 100px;
-          height: 100px;
+          height: 130px;
+          border-radius: 8px;
         }
         .title {
           width: 60%;

@@ -32,4 +32,41 @@ export default {
       commit("SAVE_PRODUCT", params);
     }
   },
+  // 计算选中商品的总价格
+  totalCount({ state, commit }, params) {
+    if (state.cartList[params].isChecked) {
+      commit("TOTAL_INCREASE", params);
+      commit("TOTAL_COUNT_INCREASE");
+    } else {
+      commit("TOTAL_DECREASE", params);
+      commit("TOTAL_COUNT_DECREASE");
+    }
+  },
+  // 全选按钮选中，计算总价格和总数
+  totalCheckedClick({ state, commit }, params) {
+    let totalCount = 0;
+    let totalPrice = 0;
+    if (params) {
+      // 1.遍历全部商品，把所有商品都变为选中状态
+      if (state.cartList.length) {
+        console.log(state.cartList);
+        for (let item of state.cartList) {
+          if (!item.isChecked) {
+            commit("CHANGE_CHECKED", item);
+            totalCount++;
+            totalPrice += (item.price * 1) * item.count;
+          }
+        }
+        commit("ALL_CHECKED_TOTALCOUNT", totalCount);
+        commit("ALL_CHECKED_TOTALPRICE", totalPrice);
+      }
+    } else {
+      for (let item of state.cartList) {
+        if (item.isChecked) {
+          commit("CHANGE_CHECKED", item);
+        }
+      }
+      commit("ALL_CHECKED_CONCEL");
+    }
+  },
 };
