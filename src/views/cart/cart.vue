@@ -19,7 +19,7 @@
     <!-- 商品列表 -->
     <CartList :list="cartList"></CartList>
     <!-- 底部汇总 -->
-    <CartBottomBar class="bottom-bar"></CartBottomBar>
+    <CartBottomBar v-if="cartLength !== 0" class="bottom-bar"></CartBottomBar>
   </div>
 </template>
 

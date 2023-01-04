@@ -1,8 +1,8 @@
 <!--
-  功能：功能描述
+  功能：toast组件
   作者：黄逸凡
   邮箱：973528232@qq.com
-  时间：2022年12月13日 11:21:27
+  时间：2023年01月04日 10:07:46
   版本：v1.0
   修改记录：
   修改内容：
@@ -10,39 +10,32 @@
   修改时间：
 -->
 <template>
-  <div class="goods-item" @click="goodsItemClick">
-    <img v-lazy="goodsItem.show.img" alt="" />
-    <p class="title">{{ goodsItem.title }}</p>
-    <div class="content">
-      <span class="price">{{ goodsItem.orgPrice }}</span>
-      <img
-        class="collect-icon"
-        src="@/assets/images/home/collect_icon.png"
-        alt=""
-      />
-      <span class="collect">{{ goodsItem.cfav }}</span>
-    </div>
-  </div>
+  <div v-if="show" class="toast">{{ msg }}</div>
 </template>
 
 <script>
 export default {
   // 组件名称
-  name: "GoodsListItem",
+  name: "demo",
   // 组件参数 接收来自父组件的数据
   props: {
-    goodsItem: {
-      type: Object,
-      default() {
-        return {};
-      },
+    msg: {
+      type: String,
+      default: "",
     },
+    show:{
+      type:Boolean,
+      default: false
+    }
   },
   // 局部注册的组件
   components: {},
   // 组件状态值
   data() {
-    return {};
+    return {
+      // msg:"",
+      // show:"",
+    };
   },
   // 计算属性
   computed: {},
@@ -50,11 +43,15 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    // 点击跳转到详情页
-    goodsItemClick() {
-      let id = this.goodsItem.iid;
-      this.$router.push(`/detail/${id}`)
-    },
+    // show(msg, duration) {
+    //   this.show = true;
+    //   this.msg = msg;
+
+    //   setTimeout(() => {
+    //     this.show = false;
+    //     this.msg = "";
+    //   }, duration)
+    // }
   },
   // 以下是生命周期钩子   注：没用到的钩子请自行删除
   /**
@@ -109,41 +106,19 @@ export default {
 <!--然而子组件的根节点元素会同时被设置了scoped的父css样式和设置了scoped的子css样式影响，-->
 <!--这么设计的目的是父组件可以对子组件根元素进行布局。-->
 <style lang="less" scoped>
-.goods-item {
-  margin-top: 15px;
-  position: relative;
-  width: 45%;
-  img {
-    width: 100%;
-    border-radius: 10px;
-  }
-  .title {
-    width: 100%; /* 定好宽度 */
-    height: 15px; /* 高度根据需求要不要 */
-    // 多出部分用省略号表示
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 16px;
-  }
-  .content {
-    // border: 1px solid red;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    .price {
-      font-weight: bold;
-    }
-    .collect {
-      position: absolute;
-      right: 20%;
-    }
-    .collect-icon {
-      position: absolute;
-      width: 25px;
-      right: 10px;
-    }
-  }
+.toast {
+  text-align: center;
+  // border: 1px solid red;
+  width: 150px;
+  padding: 10px;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  color: white;
+  background: rgba(83, 83, 83, 0.715);
+  border-radius: 8px;
 }
 </style>

@@ -21,16 +21,20 @@ export default {
   },
   // 加入购物车
   saveCart({ state, commit }, params) {
-    // 方法二：
-    let product = state.cartList.find((item) => {
-      return item.iid === params.iid;
+    return new Promise((resolve, reject) => {
+      // 方法二：
+      let product = state.cartList.find((item) => {
+        return item.iid === params.iid;
+      });
+      if (product) {
+        commit("PRODUTC_COUNT_PLUS", product);
+        resolve("当前商品数量+1");
+      } else {
+        params.count = 1;
+        commit("SAVE_PRODUCT", params);
+        resolve("添加新的商品");
+      }
     });
-    if (product) {
-      commit("PRODUTC_COUNT_PLUS", product);
-    } else {
-      params.count = 1;
-      commit("SAVE_PRODUCT", params);
-    }
   },
   // 计算选中商品的总价格
   totalCount({ state, commit }, params) {
@@ -49,12 +53,11 @@ export default {
     if (params) {
       // 1.遍历全部商品，把所有商品都变为选中状态
       if (state.cartList.length) {
-        console.log(state.cartList);
         for (let item of state.cartList) {
           if (!item.isChecked) {
             commit("CHANGE_CHECKED", item);
             totalCount++;
-            totalPrice += (item.price * 1) * item.count;
+            totalPrice += item.price * 1 * item.count;
           }
         }
         commit("ALL_CHECKED_TOTALCOUNT", totalCount);

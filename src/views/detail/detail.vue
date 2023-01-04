@@ -34,6 +34,7 @@
     </BScroll>
     <DetailBotBar @addCart="addCart"></DetailBotBar>
     <BackToTop v-show="backTopShow" @click="backToTop"></BackToTop>
+    <Toast :show="toastShow" :msg="toastMsg"></Toast>
   </div>
 </template>
 
@@ -48,6 +49,7 @@ import DetailComment from "./childCpn/DetailComment.vue";
 import DetailBotBar from "./childCpn/DetailBotBar.vue";
 
 import BScroll from "@/components/common/scroll/BScroll.vue";
+import Toast from "@/components/common/toast/Toast.vue"
 
 import { Goods, Shop, Params } from "@/request/home/homeRequest";
 import { backToTopMixin } from "@/common/mixin";
@@ -69,6 +71,7 @@ export default {
     DetailComment,
     DetailBotBar,
     BScroll,
+    Toast
   },
   // 组件状态值
   data() {
@@ -82,6 +85,8 @@ export default {
       goodsComment: [],
       navPos: [0, 0, 0],
       currentIndex: 0,
+      toastShow: false,
+      toastMsg:""
     };
   },
   // 计算属性
@@ -92,9 +97,7 @@ export default {
   methods: {
     imageLoad() {
       this.$refs.scroll.refresh();
-      console.log(111);
       this.getNavPos();
-      console.log(this.navPos);
     },
     // 监听navbar点击事件
     navClick(index) {
@@ -155,7 +158,15 @@ export default {
 
       // 将商品添加到购物车
       console.log(product);
-      this.$store.dispatch("saveCart",product);
+      this.$store.dispatch("saveCart",product).then(res => {
+        console.log(res);
+        this.toastShow = true;
+        this.toastMsg = res;
+        setTimeout(() => {
+          this.toastShow = false;
+          this.toastMsg = ""
+        },2000)
+      });
 
     },
   },
@@ -196,12 +207,12 @@ export default {
    */
   activated() {
     this.iid = this.$route.params.iid;
-    console.log(this.iid);
+    // console.log(this.iid);
     let params = {
       iid: this.iid,
     };
     this.$store.dispatch("getGoodsDetailById", params).then((res) => {
-      console.log(res);
+      // console.log(res);
       let data = res.result;
       // 获取顶部轮播数据
       this.topImages = data.itemInfo.topImages;
